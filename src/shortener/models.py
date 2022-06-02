@@ -3,25 +3,25 @@ from django.db import models
 import random
 import string
 
-
 def code_generator():
     letters = string.ascii_letters
     digits = string.digits
     character = letters+digits
-    sample_character = ''.join(random.sample(character, 4))
-    return sample_character
+    sample_char = ''.join(random.sample(character, 5))
+    return sample_char
+
+
 
 
 # Create your models here.
-
-class Link(models.Model):
-    url = models.CharField(max_length=1000)
-    code = models.CharField(max_length=200, null=True, blank=True, unique=True)
+class LinkShortener(models.Model):
+    long_url = models.CharField(max_length=250, unique=True)
+    code = models.CharField(max_length=20, unique=True, blank=True, null=True)
 
     def __str__(self):
-        return self.url
+        return self.long_url
     
-    def save(self, *args , **kwargs):
+    def save(self, *arg, **kwarg):
         if not self.code:
             while True:
                 try:
@@ -29,5 +29,8 @@ class Link(models.Model):
                 except IntegrityError:
                     continue
                 break
+        return super().save(*arg, **kwarg)
 
-        return super().save(*args, **kwargs)    
+
+    
+
